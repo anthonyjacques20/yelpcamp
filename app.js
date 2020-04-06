@@ -60,6 +60,11 @@ app.use("/campgrounds", campgroundRoutes);	//Append `/campgrounds` in front of e
 app.use("/campgrounds/:id/comments", commentRoutes);
 
 
-app.listen(3000, function(){
+var port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+
+app.listen(port, function(){
 	console.log("The YelpCamp app has started!");
 })
