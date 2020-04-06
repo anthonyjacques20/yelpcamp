@@ -19,8 +19,12 @@ var campgroundRoutes = require("./routes/campgrounds");
 var commentRoutes = require("./routes/comments");
 var indexRoutes = require("./routes/index");
 
+//Put a default value into url so that if something goes wrong or someone clones this code
+//Then there is at least a default value
+var url = process.env.DATABASEURL || "mongodb://localhost:27017/yelp_camp";
+
 //Connect to database
-mongoose.connect(process.env.DATABASEURL, 
+mongoose.connect(url, 
 	{
 		useNewUrlParser: true,
 		useCreateIndex: true,
