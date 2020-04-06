@@ -6,6 +6,8 @@ var flash = require("connect-flash");
 var passport = require("passport");
 var LocalStrategy = require("passport-local");
 var methodOverride = require("method-override");
+//Configure dotenv so we can use usernames/passwords
+require('dotenv').config();
 //SCHEMA SETUP
 var Campground = require("./models/campground");
 var Comment = require("./models/comment");
@@ -18,7 +20,18 @@ var commentRoutes = require("./routes/comments");
 var indexRoutes = require("./routes/index");
 
 //Connect to database
-mongoose.connect("mongodb://localhost:27017/yelp_camp", {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
+//mongoose.connect("mongodb://localhost:27017/yelp_camp", {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
+mongoose.connect("mongodb+srv://mongoDBUser:" + process.env.DB_PASS + "@anthonyscluster-secvg.mongodb.net/test?retryWrites=true&w=majority", 
+	{
+		useNewUrlParser: true,
+		useCreateIndex: true,
+		useUnifiedTopology: true
+}).then(() => {
+	console.log("Connected to DB!");
+}).catch(err => {
+	console.log("Error: " + err.message);
+});
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 //__dirname shows in what directory this was run
