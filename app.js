@@ -83,4 +83,5 @@ if (port == null || port == "") {
 
 app.listen(port, function(){
 	console.log("The YelpCamp app has started!");
+	console.log("Don't forget to start mongodb database with `./data/mongod` if using goorm");
 })
