@@ -2,6 +2,12 @@ body {
 	background-color: black;
 }
 
+#footerDiv {
+	position: fixed;
+	bottom: 0;
+	margin-left: 5px;
+}
+
 #landing-header {
 	z-index: 1;
 	position: relative;
