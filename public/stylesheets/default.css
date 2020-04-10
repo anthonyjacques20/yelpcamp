@@ -19,3 +19,12 @@
 	bottom: 0;
 	margin-left: 5px;
 }
+
+.formHeader {
+	text-align: center;
+}
+
+.formDiv {
+	width: 30%;
+	margin:20px auto;
+}
