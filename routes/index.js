@@ -58,4 +58,8 @@ router.get("/logout", function(req, res){
 	res.redirect("/campgrounds");
 });
 
+router.get("/about", function(req, res){
+	res.render("about");
+});
+
 module.exports = router;
