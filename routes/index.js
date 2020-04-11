@@ -16,7 +16,7 @@ router.get("/", function(req, res){
 //==================
 //Show register form
 router.get("/register", function(req, res){
-	res.render("register");
+	res.render("register", {page: 'register'});
 });
 //Handle sign up logic
 router.post("/register", function(req, res){
@@ -39,7 +39,7 @@ router.post("/register", function(req, res){
 
 //Show login form
 router.get("/login", function(req, res){
-	res.render("login");
+	res.render("login", {page: 'login'});
 });
 
 //Handle login logic
@@ -59,7 +59,7 @@ router.get("/logout", function(req, res){
 });
 
 router.get("/about", function(req, res){
-	res.render("about");
+	res.render("about", {page: 'about'});
 });
 
 module.exports = router;
