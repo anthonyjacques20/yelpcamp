@@ -7,6 +7,16 @@ var Campground = require("../models/campground");
 //So these two lines are the same
 //var middleware = require("../middleware/index");
 var middleware = require("../middleware");
+var NodeGeocoder = require("node-geocoder");
+
+var options = {
+	provider: 'google',
+	httpAdapter: 'https',
+	apiKey: process.env.GEOCODER_API_KEY,
+	formatter: null
+};
+var geocoder = NodeGeocoder(options);
+
 //=======================
 //Image upload code
 var multer = require("multer");
@@ -52,28 +62,39 @@ router.get("/", function(req, res){
 
 //CREATE - Add a new one to the DB
 router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, res){
-	//Put this code in the callback for geocoder.geocode() callback for google maps
-	cloudinary.v2.uploader.upload(req.file.path, function(err, result){
-		if(err){
-			req.flash("error", err.message);
-			return res.redirect("back");
+	geocoder.geocode(req.body.campground.location, function(err, data) {
+		if(err || !data.length) {
+			req.flash('error', 'Invalid Address');
+			return res.redirect('back');
 		}
 		
-		//Add cloudinary url for the image to the campground object under image property
-		req.body.campground.image = result.secure_url;
-		//add image's public_id to campground object
-		req.body.campground.imageId = result.public_id;
-		//Add author to campground
-		req.body.campground.author = {
-			id: req.user._id,
-			username: req.user.username
-		}
-		Campground.create(req.body.campground, function(err, campground){
+		req.body.campground.lat = data[0].latitude;
+		req.body.campground.lng = data[0].longitude;
+		req.body.campground.location = data[0].formattedAddress;
+
+		//Put this code in the callback for geocoder.geocode() callback for google maps
+		cloudinary.v2.uploader.upload(req.file.path, function(err, result){
 			if(err){
-				req.flash('error', err.message);
-				return res.redirect('back');
+				req.flash("error", err.message);
+				return res.redirect("back");
 			}
-			res.redirect('/campgrounds/' + campground.id);
+
+			//Add cloudinary url for the image to the campground object under image property
+			req.body.campground.image = result.secure_url;
+			//add image's public_id to campground object
+			req.body.campground.imageId = result.public_id;
+			//Add author to campground
+			req.body.campground.author = {
+				id: req.user._id,
+				username: req.user.username
+			}
+			Campground.create(req.body.campground, function(err, campground){
+				if(err){
+					req.flash('error', err.message);
+					return res.redirect('back');
+				}
+				res.redirect('/campgrounds/' + campground.id);
+			});
 		});
 	});
 });
